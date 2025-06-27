@@ -1,9 +1,9 @@
 
 catchAsync
 
-AppErrorClass (custom error class)
-
 undefinedRouteHandler
+
+AppErrorClass (custom error class)
 
 globalErrorHandler
     sendDevelopmentError

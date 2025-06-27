@@ -5,6 +5,9 @@ const handleInvalidIdDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
+  // use err.keyValue instead of regex on err.errmsg (regex can fail).
+  // err.errmsg is deprecated in recent mongoose versions.
+
   if (!err.errmsg) return new AppErrorClass("duplicate field value error", 400);
 
   const match = err.errmsg.match(/(["'])(\\?.)*?\1/);

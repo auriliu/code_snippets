@@ -1,0 +1,36 @@
+create project folder
+
+run npm init -y
+
+install packages: npm install express@4 mongodb mongoose nodemon dotenv
+
+- create SERVER.JS
+    express app setup
+    basic middleware (like express.json())
+    route mounting (e.g., app.use("/api/v1/..."))
+    undefined route handler
+    global error handler
+    database connection (e.g., mongodb with mongoose)
+    server start code (app.listen(...))
+
+create folders: 
+    routes, 
+    controllers, 
+    models
+
+connect to mongodb in server.js using mongoose
+
+---------------------------------------------------
+
+set up express app and middleware in server.js
+
+
+define schemas in models
+
+write logic in controllers
+
+define endpoints in routes
+
+use routes in server.js
+
+run with node server.js or use nodemon
