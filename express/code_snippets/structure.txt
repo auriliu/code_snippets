@@ -1,0 +1,14 @@
+
+catchAsync
+
+AppErrorClass (custom error class)
+
+undefinedRouteHandler
+
+globalErrorHandler
+    sendDevelopmentError
+    sendProductionError
+
+    handleInvalidIdDB
+    handleDuplicateFieldsDB
+    handleValidationErrorDB

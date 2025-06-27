@@ -1,6 +1,7 @@
 import express from "express";
-import AppErrorClass from "./appErrorClass.js";
 const app = express();
+
+import AppErrorClass from "./AppErrorClass.js";
 
 // process.on("uncaughtException", () => {
 //   console.log("unhandled exception! 😲 shutting down...");
@@ -15,7 +16,7 @@ const app = express();
 // ///////////////////////////////////////////////////////////////////////
 
 // [2] w/o err class: undefinedRouteHandler kicks in, sends err obj via next()
-export const undefinedRouteHandler_wo_err_class = (req, res, next) => {
+const undefinedRouteHandler_wo_err_class = (req, res, next) => {
   //   define the error obj (1)
   const err = new Error("accessing undefined route");
   //   err.message = "accessing undefined route";
@@ -27,7 +28,7 @@ export const undefinedRouteHandler_wo_err_class = (req, res, next) => {
 };
 
 // [2] with error class:
-export const undefinedRouteHandler = (req, res, next) => {
+const undefinedRouteHandler = (req, res, next) => {
   next(new AppErrorClass("accessing undefined route 2.0", 404));
 };
 
