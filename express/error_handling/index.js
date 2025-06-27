@@ -37,6 +37,79 @@ const globalErrorHandler = (err, req, res, next) => {
   });
 };
 
+// production vs development handlers:
+const sendProductionError = (res, err) => {
+  if (err.isOperational) {
+    // ERRS FROM MONGOOSE R NOT MARKED AS OPERATIONAL.
+
+    res.status(err.statusCode).json({
+      // as little as possible
+      status: err.status,
+      message: err.message,
+    });
+  } else {
+    // unknown errors, dont leak the details to the client.
+    console.error("error 😤", err);
+
+    // send even less
+    res.status(500).json({
+      status: "error",
+      message: "something went wrong.",
+    });
+  }
+};
+
+const sendDevelopmentError = (res, err) => {
+  res.status(err.statusCode).json({
+    // as much as possible
+    status: err.status,
+    message: err.message,
+    error: err,
+    stack: err.stack,
+  });
+};
+
+// mongoDB error handlers:
+const handleInvalidId = (err) => {
+  const message = `invalid ${err.path}: ${err.value}`;
+  return new appError(message, 400);
+};
+const handleDublicateName = (err) => {
+  const msgSource = err.errmsg || err.message || "";
+  const value = msgSource.match(/([""])(\\?.)*\1/)[0];
+  const message = `duplicate field value: ${value}. use another value`;
+  return new appError(message, 400);
+};
+const handleValidation = (err) => {
+  const errors = Object.values(err.errors).map((el) => el.message);
+  const message = `invalid input: ${errors.join(". ")}`;
+  return new appError(message, 400);
+};
+
+// [3]  globalErrorHandler receives err obj from next(), send a response.
+const globalErrorHandler_w_env = (err, req, res, next) => {
+  const env = "development";
+
+  err.status = err.status || "error";
+  err.statusCode = err.statusCode || "500";
+
+  if (env === "development") {
+    sendDevelopmentError(res, err);
+  }
+
+  if (env === "production") {
+    // let error = { ...err };
+    let error = Object.create(err);
+
+    // mongoDB errors:
+    if (error.name === "CastError") error = handleInvalidId(error); // invalid id
+    if (error.code === 11000) error = handleDublicateName(error); // duplicate
+    if (error.name === "ValidationError") error = handleValidation(error); // validation
+
+    sendProductionError(res, error);
+  }
+};
+
 app.all("*", undefinedRouteHandler); // [1] accessing undefined route
 app.use(globalErrorHandler); // GLOBAL ERR HD MW must be last
 

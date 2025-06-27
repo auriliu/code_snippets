@@ -6,7 +6,13 @@ class AppErrorClass extends Error {
     this.statusCode = statusCode;
     this.status = statusCode.toString().startsWith("4") ? "fail" : "error";
     this.isOperational = true;
-    // this.isOperational = true, marks the error as expected (e.g. invalid input, not found).
+    // this.isOperational = true, marks the error as operational/expected (e.g. invalid input, not found).
+    // but how do u knwo??
+
+    // you don’t.
+    // you set isOperational = true only when you create the error intentionally (e.g. using AppErrorClass).
+    // unexpected or system errors (like a bug, undefined is not a function) won’t have this flag—so you can tell them apart.
+
     // helps distinguish it from programming bugs or unknown errors.
     // useful in error handling to decide what to log or show to users.
 
