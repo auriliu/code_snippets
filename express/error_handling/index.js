@@ -2,6 +2,13 @@ import express from "express";
 import AppErrorClass from "./appErrorClass.js";
 const app = express();
 
+// process.on("uncaughtException", () => {
+//   console.log("unhandled exception! 😲 shutting down...");
+//   console.log(err.name, err.message);
+//   process.exit(1);
+// });
+// use try/catch instead.
+
 // ///////////////////////////////////////////////////////////////////////
 // CLEAN. covering: undefinedRouteHandler + globalErrorHandler + error class.
 // all in one place to see how data flows.
@@ -116,13 +123,26 @@ app.use(globalErrorHandler); // GLOBAL ERR HD MW must be last
 // ///////////////////////////////////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////////
 
-app.listen(9000, () => console.log(`the server is up at port 9000`));
+const server = app.listen(9000, () =>
+  console.log(`the server is up at port 9000`)
+);
 
-// going for: http://127.0.0.1:9000 will return:
-// {
-//     "status": "fail",
-//     "message": "accessing undefined route"
-// }
+// listens for unhandled promise rejections: async code.
+// any promise that gets rejected without a .catch() or try/catch handler
+//     missing .catch() on a promise .then() chain.
+//     using async/await without a surrounding try/catch .
+//     forgotten return in promise chains, causing rejection to go unhandled .
+//     “send and forget” operations like logging without .catch()
+
+// process.on("unhandledRejection", (err) => {
+//   console.log(err.name, err.message);
+//   console.log("unhandled rejection! 😲 shutting down...");
+//   //   giving the server time to finish pending tasks.
+//   server.close(() => {
+//     process.exit(1);
+//   });
+// });
+// dont really need this, use .catch() on rejected promises.
 
 // ///////////////////////////////////////////////////////////////////////
 // MESSY: explanation.
