@@ -16,7 +16,7 @@ export const protect = async (req, res, next) => {
     // decoded = decoded data from the token: user id.
     req.user = decoded;
 
-    // e.g. acc has been removed by administrator.
+    // e.g. acc has been removed by administrator or deleted by the user.
     // check if the user exists in the database
     const user = await User.findById(decoded.id);
     if (!user)
@@ -24,13 +24,22 @@ export const protect = async (req, res, next) => {
 
     // check if the password has been changed after the token was issued
     const passwordChangedAt = user.passwordChangedAt.getTime() / 1000;
+    // compares timestamps of id.issuedAt vs passwordChangedAt.
     if (decoded.iat < passwordChangedAt)
       return res
         .status(401)
         .json({ message: "password changed. please log in again." });
+
+    req.user = user; // add currecntUser to the req obj. so user.role is available for restrict()
 
     next();
   } catch (err) {
     res.status(401).json({ message: "invalid token." });
   }
 };
+
+// // JWT error handlers:
+// if (error.name === "JsonWebTokenError") (error) => handleJWTError();
+// if (error.name === "TokenExpiredError") (error) => handleJWTExpiredError();
+// const handleJWTError = () => new AppError("invalid token", 401)
+// const handleJWTExpiredError = () => new AppError("expired token", 401)

@@ -30,6 +30,7 @@ app.post("/api/v1/login", login);
 
 // app.post("/api/v1/users", createUser);
 app.get("/api/v1/users", protect, getAllUsers);
+// app.get("/api/v1/users", protect, restrict, deleteUser);
 
 // testing global error handler:
 // app.get("/error", (req, res, next) => {

@@ -45,8 +45,17 @@ const userSchema_2 = new mongoose.Schema(
 );
 
 UserSchema.pre("save", async function (next) {
+  // only run if password was modified: prevents re-hashing the passwor
   if (!this.isModified("password")) return next();
+
+  // hash the password with bcrypt
   this.password = await bcrypt.hash(this.password, 12);
+
+  // set passwordChangedAt only if not a new user
+  if (!this.isNew) {
+    this.passwordChangedAt = Date.now() - 1000;
+  }
+
   next();
 });
 
