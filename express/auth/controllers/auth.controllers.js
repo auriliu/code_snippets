@@ -22,11 +22,9 @@ export const signup = async (req, res) => {
     const createdUser = await newUser.save();
 
     //auto login: create a token (1), send it to the user (2)
-    const token = jwt.sign(
-      { id: newUser._id, email: newUser.email },
-      "JWT_SECRET_PLACEHOLDER",
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: newUser._id }, "JWT_SECRET_PLACEHOLDER", {
+      expiresIn: "1h",
+    });
 
     res.status(201).json({ createdUser, message: "user created.", token });
   } catch (err) {
@@ -35,6 +33,7 @@ export const signup = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
-  const users = await User.find();
+  // exclude the password
+  const users = await User.find().select("-password");
   res.json({ users, message: "get all users" });
 };

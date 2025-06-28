@@ -17,11 +17,9 @@ export const signup = async (req, res) => {
     await newUser.save();
 
     // auto user login
-    const token = jwt.sign(
-      { id: newUser._id, email: newUser.email },
-      "process.env.JWT_SECRET",
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: newUser._id }, "process.env.JWT_SECRET", {
+      expiresIn: "1h",
+    });
 
     res.status(201).json({ message: "user created.", token });
     // end of auto user login

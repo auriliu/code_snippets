@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    select: false, // still visible in the db
   },
 });
 

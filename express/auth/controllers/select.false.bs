@@ -1,0 +1,12 @@
+yes. select: false in schema only affects queries that don't override selection.
+
+your code uses .select('-password'), which manually excludes the field.
+if you had just used User.find(), the password would still show unless select: false is set in schema.
+
+so:
+
+    .select('-password') → explicitly excludes
+
+    select: false → excludes by default in queries like User.findOne() or User.find() without select
+
+both together give strong control.
