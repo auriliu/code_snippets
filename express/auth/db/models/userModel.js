@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -41,5 +42,11 @@ const userSchema_2 = new mongoose.Schema(
     timestamps: true, // auto-manage createdAt and updatedAt
   }
 );
+
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
 
 export default mongoose.model("User", UserSchema);

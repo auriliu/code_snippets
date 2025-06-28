@@ -2,7 +2,7 @@ import express from "express";
 
 import connectDB from "./db/db.js";
 import { globalErrorHandler } from "./middelware/error.middleware.js";
-import { createUser, getAllUsers } from "./controllers/auth.controllers.js";
+import { signup, getAllUsers } from "./controllers/auth.controllers.js";
 
 const app = express();
 connectDB();
@@ -22,9 +22,9 @@ app.use(express.json()); //not needed yet.
 // app.all(path, handler)
 // runs for all HTTP methods, but only for the exact route path.
 
-app.post("/api/v1/signup", createUser);
+app.post("/api/v1/signup", signup);
 
-app.post("/api/v1/users", createUser);
+// app.post("/api/v1/users", createUser);
 app.get("/api/v1/users", getAllUsers);
 
 // testing global error handler:

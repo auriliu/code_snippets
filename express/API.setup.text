@@ -2,7 +2,7 @@ create project folder
 
 run npm init -y
 
-install packages: npm install express@4 mongodb mongoose nodemon dotenv
+install packages: npm install express@4 mongodb mongoose nodemon dotenv bcryptjs jsonwebtoken
 
 - create SERVER.JS
     express app setup
